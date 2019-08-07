@@ -1,0 +1,19 @@
+archives.ipfs.io - SSL error
+datatogether.org - hosted on github. cid unavailable. we should remove the dnslink.
+conf.ipfs.io - misconfigured or otherwise unavailable.
+
+
+zcash.dag.ipfs.io - cid unavailable...
+
+wikipedia-on-ipfs.org - just redirects to our blog
+
+
+h.ipfs.io - dupe of ipfs.io...
+
+v04x.ipfs.io - 404 and no dnslink.
+
+---
+
+dev.awesome.ipfs.io
+dev.js.ipfs.io
+refs.ipfs.io
