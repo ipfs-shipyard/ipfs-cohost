@@ -1,27 +1,48 @@
 #!/usr/bin/env node
-'use strict';
-const meow = require('meow');
-const cohost = require('.');
+'use strict'
+const meow = require('meow')
+const cohost = require('.')
 const cli = meow(`
-	Usage
-	  $ cohost <input>
+  Usage
+    $ ipfs-cohost <domain 1> <domain 2>...
 
-	Examples
-	  $ cohost docs.ipfs.io
+  Example
+    $ ipfs-cohost docs.ipfs.io cid.ipfs.io
+
+  Options
+    --no-pin, Find the cumlative sizes but dont pin them
+    --silent, -s  Just do your job
 `, {
-	flags: {
-		size: {
-			type: 'boolean',
-			alias: 's'
-		}
-	}
-});
+  flags: {
+    pin: {
+      type: 'boolean',
+      default: true
+    },
+    silent: {
+      type: 'boolean',
+      default: false,
+      alias: 's'
+    }
+  }
+})
+
 /*
 {
-	input: ['domain.com', 'otherthing.org'],
-	flags: {size: true},
-	...
+  input: ['domain.com', 'otherthing.org'],
+  flags: {pin: true, silent: false},
+  ...
 }
 */
+async function run () {
+  if (cli.input.length === 0) {
+    return cli.showHelp()
+  }
+  try {
+    await cohost(cli.input, cli.flags)
+  } catch (error) {
+    console.error(error.message || error)
+    process.exit(-1)
+  }
+}
 
-cohost(cli.input, cli.flags);
+run()
