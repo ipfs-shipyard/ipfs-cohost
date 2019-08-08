@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-'use strict'
+
+const ipfsProvider = require('ipfs-provider')
 const meow = require('meow')
 const cohost = require('.')
 const cli = meow(`
@@ -33,16 +34,32 @@ const cli = meow(`
   ...
 }
 */
+
 async function run () {
   if (cli.input.length === 0) {
     return cli.showHelp()
   }
+  const { ipfs, provider } = await getIpfs()
   try {
-    await cohost(cli.input, cli.flags)
+    await cohost(ipfs, provider, cli.input, cli.flags)
   } catch (error) {
     console.error(error.message || error)
     process.exit(-1)
   }
+  if (provider === 'JS_IPFS' && !cli.flags.pin) {
+    await ipfs.stop()
+    process.exit()
+  }
+}
+
+function getIpfs () {
+  return ipfsProvider({
+    tryWebExt: false,
+    tryWindow: false,
+    tryJsIpfs: true,
+    getJsIpfs: () => require('ipfs'),
+    jsIpfsOpts: { silent: true }
+  })
 }
 
 run()

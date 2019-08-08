@@ -1,12 +1,10 @@
 const ora = require('ora')
 const prettyBytes = require('pretty-bytes')
-const ipfsProvider = require('ipfs-provider')
 
 module.exports = cohost
 
-async function cohost (input, flags) {
+async function cohost (ipfs, provider, input, flags) {
   const log = logger.bind(null, flags.silent)
-  const { ipfs, provider } = await getIpfs()
   const longestDomain = input.reduce((a, b) => a.length > b.length ? a.length : b.length, '')
   log('🔌 Using', provider === 'IPFS_HTTP_API' ? 'local ipfs daemon via http api' : 'js-ipfs node')
   if (input.length > 1) {
@@ -42,10 +40,12 @@ async function cohost (input, flags) {
       spinner.stop()
       log(`📍 Pinned ${res.domain}`)
     }
-    log(`🤝 Co-hosting ${results.length} domains via IPFS.`)
-  }
-  if (provider === 'JS_IPFS') {
-    log(`💡 Leave this command running to continue co-hosting`)
+    if (results.length > 0) {
+      log(`🤝 Co-hosting ${results.length === 1 ? results[0].domain : `${results.length} domains`} via IPFS.`)
+    }
+    if (provider === 'JS_IPFS') {
+      log(`💡 Leave this command running to continue co-hosting`)
+    }
   }
 }
 
@@ -56,14 +56,4 @@ function logger (silent, ...args) {
 
 function getSpinner (text) {
   return ora({ text: ` ${text}`, spinner: 'dots' }).start()
-}
-
-function getIpfs () {
-  return ipfsProvider({
-    tryWebExt: false,
-    tryWindow: false,
-    tryJsIpfs: true,
-    getJsIpfs: () => require('ipfs'),
-    jsIpfsOpts: { silent: true }
-  })
 }

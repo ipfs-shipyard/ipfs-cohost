@@ -7,7 +7,7 @@ A CLI to co-host websites published to IPFS.
 Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain, and pins it to your local IPFS node.
 
 ```console
-⨎ ipfs-cohost ipfs.io docs.ipfs.io awesome.ipfs.io
+$ ipfs-cohost ipfs.io docs.ipfs.io awesome.ipfs.io
 🔌 Using local ipfs daemon via http api
 🔍 Finding DNSLinks for 3 domains
 🔗 ipfs.io         QmXZz6vQTMiu6UyGxVgpLB6xJdHvvUbhdWagJQNnxXAjpn 11.5 MB
@@ -23,7 +23,7 @@ Pass it the list of domains you want to cohost. It finds the CID from the [DNSLi
 Passing the `--no-pin` flag you can find the total size but skip pinning it.
 
 ```console
-⨎ ipfs-cohost dist.ipfs.io tr.wikipedia-on-ipfs.org --no-pin
+$ ipfs-cohost dist.ipfs.io tr.wikipedia-on-ipfs.org --no-pin
 🔌 Using local ipfs daemon via http api
 🔍 Finding DNSLinks for 2 domains
 🔗 dist.ipfs.io             QmVJL1ew9ytqZGR7Tg121tHEXPwbYVNxzHked3QzVgWEzD 10.6 GB
@@ -47,7 +47,6 @@ $ npm i -g ipfs-cohost
 
 # run it
 $ ipfs-cohost docs.ipfs.io blog.ipfs.io ipfs.io
-
 ```
 
 You can run the latest version of `ipfs-cohost` without explicitly installing it via `npx`
