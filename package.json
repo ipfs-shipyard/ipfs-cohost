@@ -1,10 +1,10 @@
 {
   "name": "ipfs-cohost",
   "version": "1.0.0",
-  "description": "pin sites to ipfs from their dnslink",
+  "description": "A CLI to co-host websites published to IPFS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "say sorry && exit 1"
   },
   "bin": {
     "ipfs-cohost": "./bin.js"
