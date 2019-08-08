@@ -1,6 +1,8 @@
 # ipfs-cohost 🌐✨🤝
 
-A CLI to co-host websites published to IPFS.
+A CLI to co-host websites published to [IPFS].
+
+If your domain has a [DNSlink] to a CID, then `ipfs-cohost` will let others pin it to their IPFS node.
 
 ## Usage
 
@@ -41,7 +43,7 @@ $ ipfs-cohost ipfs.io --silent
 
 With `node` >= 10.15 and `npm` > 6.9 installed , you can install `ipfs-cohost` via `npm`
 
-```
+```console
 # install it
 $ npm i -g ipfs-cohost
 
@@ -56,4 +58,5 @@ $ npx ipfs-cohost docs.ipfs.io blog.ipfs.io ipfs.io
 ```
 
 
+[IPFS]: https://ipfs.io
 [DNSLink]: https://dnslink.io
