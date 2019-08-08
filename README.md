@@ -4,6 +4,7 @@ A CLI to co-host websites published to [IPFS].
 
 If your domain has a [DNSlink] to a CID, then `ipfs-cohost` will let others pin it to their IPFS node.
 
+
 ## Usage
 
 Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain, and pins it to your local IPFS node.
@@ -37,6 +38,18 @@ Passing the `--silent` options will prevent any logging.
 
 ```console
 $ ipfs-cohost ipfs.io --silent
+```
+
+### Could you do this with a few lines of bash?
+
+Yes. That is how this command started it's life. You do not need `ipfs-cohost` to co-hosts websites; the `ipfs` command can do it all!
+
+```console
+$ ipfs object stat /ipns/docs.ipfs.io | grep CumulativeSize
+CumulativeSize: 6591536
+
+$ ipfs pin add /ipns/docs.ipfs.io
+pinned QmXrsvjeZeH6rCzgQSJycKq9fFqNgkptTqYRexzaNy4wx3 recursively
 ```
 
 ## Install
