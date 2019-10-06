@@ -52,7 +52,7 @@ async function rm (ipfs, input) {
   for (const domain of input) {
     spinner = spin(`Stopping to cohost ${domain}...`)
     await cohost.rm(ipfs, domain)
-    spinner.succeed(` ${domain} no longer cohosted!`)
+    spinner.succeed(` ${domain} no longer cohosted.`)
   }
 }
 
