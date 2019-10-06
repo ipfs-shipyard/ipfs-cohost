@@ -4,7 +4,6 @@ A CLI to co-host websites published to [IPFS].
 
 If your domain has a [DNSlink] to a CID, then `ipfs-cohost` will let others pin it to their IPFS node.
 
-
 ## Usage
 
 Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain, and pins it to your local IPFS node.
@@ -25,17 +24,56 @@ Passing the `--silent` options will prevent any logging.
 $ ipfs-cohost ipfs.io --silent
 ```
 
+### Remove cohosted website
+
+You can remove one or more websites at once:
+
+```
+$ ipfs-cohost rm ipfs.io docs.ipfs.io awesome.ipfs.io
+```
+
+### List cohosted websites and snapshots
+
+Use `ls` with no arguments to list the cohosted domains:
+
+```bash
+$ ipfs-cohost ls
+🔌 Using local ipfs daemon via http api
+📍 Cohosted domains:
+      ipfs.io
+      docs.ipfs.io
+      awesome.ipfs.io
+```
+
+Use `ls` with domains as arguments to list the snapshots for each domain:
+
+```
+$ ipfs-cohost awesome.ipfs.io
+🔌 Using local ipfs daemon via http api
+⏱ Snapshots for ipfs.io:
+      2019-10-06_095057
+      2019-10-05_135342
+```
+
+### Sync the current domains
+
+Check if you have the most up to date version of each website and updates the snapshots.
+
+```
+$ ipfs-cohost sync
+```
+
+### Garbage collection
+
+Delete all snapshots but the last `n`. If `n` is not provided, all snapshots will be deleted.
+
+```
+$ ipfs-cohost gc [n]
+```
+
 ### Could you do this with a few lines of bash?
 
-Yes. That is how this command started it's life. You do not need `ipfs-cohost` to co-hosts websites; the `ipfs` command can do it all!
-
-```console
-$ ipfs object stat /ipns/docs.ipfs.io | grep CumulativeSize
-CumulativeSize: 6591536
-
-$ ipfs pin add /ipns/docs.ipfs.io
-pinned QmXrsvjeZeH6rCzgQSJycKq9fFqNgkptTqYRexzaNy4wx3 recursively
-```
+Yes. All of this commands can be reproducible via bash commands. Please take a look at the [cohosting SPEC](https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md) to know which `ipfs` commands are equivalent to this ones.
 
 ## Install
 
@@ -46,15 +84,14 @@ With `node` >= 10.15 and `npm` > 6.9 installed , you can install `ipfs-cohost` v
 $ npm i -g ipfs-cohost
 
 # run it
-$ ipfs-cohost docs.ipfs.io blog.ipfs.io ipfs.io
+$ ipfs-cohost add docs.ipfs.io blog.ipfs.io ipfs.io
 ```
 
 You can run the latest version of `ipfs-cohost` without explicitly installing it via `npx`
 
 ```console
-$ npx ipfs-cohost docs.ipfs.io blog.ipfs.io ipfs.io
+$ npx ipfs-cohost add docs.ipfs.io blog.ipfs.io ipfs.io
 ```
-
 
 [IPFS]: https://ipfs.io
 [DNSLink]: https://dnslink.io
