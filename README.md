@@ -30,13 +30,17 @@ You can remove one or more websites at once:
 
 ```
 $ ipfs-cohost rm ipfs.io docs.ipfs.io awesome.ipfs.io
+🔌 Using local ipfs daemon via http api
+✔  ipfs.io no longer cohosted.
+✔  docs.ipfs.io no longer cohosted.
+✔  awesome.ipfs.io no longer cohosted.
 ```
 
 ### List cohosted websites and snapshots
 
 Use `ls` with no arguments to list the cohosted domains:
 
-```bash
+```console
 $ ipfs-cohost ls
 🔌 Using local ipfs daemon via http api
 📍 Cohosted domains:
@@ -47,7 +51,7 @@ $ ipfs-cohost ls
 
 Use `ls` with domains as arguments to list the snapshots for each domain:
 
-```
+```console
 $ ipfs-cohost awesome.ipfs.io
 🔌 Using local ipfs daemon via http api
 ⏱ Snapshots for ipfs.io:
@@ -59,16 +63,20 @@ $ ipfs-cohost awesome.ipfs.io
 
 Check if you have the most up to date version of each website and updates the snapshots.
 
-```
+```console
 $ ipfs-cohost sync
+🔌 Using local ipfs daemon via http api
+✔  Snapshots synced!
 ```
 
 ### Garbage collection
 
 Delete all snapshots but the last `n`. If `n` is not provided, all snapshots will be deleted.
 
-```
+```console
 $ ipfs-cohost gc [n]
+🔌 Using local ipfs daemon via http api
+✔  Cohosted websites cleaned!
 ```
 
 ### Could you do this with a few lines of bash?
