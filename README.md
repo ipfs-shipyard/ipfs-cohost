@@ -28,7 +28,7 @@ $ ipfs-cohost ipfs.io --silent
 
 You can remove one or more websites at once:
 
-```
+```console
 $ ipfs-cohost rm ipfs.io docs.ipfs.io awesome.ipfs.io
 🔌 Using local ipfs daemon via http api
 ✔  ipfs.io no longer cohosted.
