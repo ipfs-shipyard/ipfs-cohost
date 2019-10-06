@@ -19,12 +19,15 @@ async function add (ipfs, domain) {
     const stat = await ipfs.files.stat(path)
 
     if (`/ipfs/${stat.hash}` === cid) {
-      await ipfs.files.mv([path, `/cohosting/${domain}/${getTimestamp()}`])
-      return
+      const newPath = `/cohosting/${domain}/${getTimestamp()}`
+      await ipfs.files.mv([path, newPath])
+      return ipfs.files.stat(newPath)
     }
   }
 
-  await ipfs.files.cp([cid, `/cohosting/${domain}/${getTimestamp()}`])
+  const newPath = `/cohosting/${domain}/${getTimestamp()}`
+  await ipfs.files.cp([cid, newPath])
+  return ipfs.files.stat(newPath)
 }
 
 async function rm (ipfs, domain) {

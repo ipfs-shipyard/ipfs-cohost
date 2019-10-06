@@ -4,6 +4,11 @@ const ipfsProvider = require('ipfs-provider')
 const meow = require('meow')
 const cohost = require('.')
 const ora = require('ora')
+const prettyBytes = require('pretty-bytes')
+
+let log = null
+let spin = null
+
 const cli = meow(`
   Usage
     $ ipfs-cohost <domain>...
@@ -28,21 +33,26 @@ const cli = meow(`
   }
 })
 
-async function add (ipfs, input, silent) {
-  let spinner
+async function add (ipfs, input) {
+  const longestDomain = input.reduce((r, c) => r.length >= c.length ? r : c)
+  let size = 0
   for (const domain of input) {
-    if (!silent) spinner = ora({ text: `Cohosting ${domain}...` }).start()
-    await cohost.add(ipfs, domain)
-    if (!silent) spinner.succeed(`${domain} cohosted!`)
+    const spinner = spin(`Cohosting ${domain}...`)
+    const { hash, cumulativeSize } = await cohost.add(ipfs, domain)
+    spinner.stop()
+    size += cumulativeSize
+    log('📍', domain.padEnd(longestDomain.length), hash, prettyBytes(cumulativeSize))
   }
+  log('📦', 'Total size', prettyBytes(size), 'for', input.length, 'domains')
+  log('🤝', 'Co-hosting', input.length, 'domains via IPFS.')
 }
 
-async function rm (ipfs, input, silent) {
+async function rm (ipfs, input) {
   let spinner
   for (const domain of input) {
-    if (!silent) spinner = ora({ text: `Stopping to cohost ${domain}...` }).start()
+    spinner = spin(`Stopping to cohost ${domain}...`)
     await cohost.rm(ipfs, domain)
-    if (!silent) spinner.succeed(`${domain} no longer cohosted!`)
+    spinner.succeed(` ${domain} no longer cohosted!`)
   }
 }
 
@@ -50,34 +60,31 @@ async function ls (ipfs, input) {
   if (input.length > 0) {
     for (const domain of input) {
       const snapshots = await cohost.ls(ipfs, domain)
-      console.log(`Snapshots for ${domain}:`)
-      snapshots.forEach(n => console.log(` - ${n}`))
-      console.log('')
+      log(`⏱  Snapshots for ${domain}:`)
+      snapshots.forEach(n => log(`      ${n}`))
     }
 
     return
   }
 
-  console.log('Cohosted domains:')
+  log('📍 Cohosted domains:')
   const domains = await cohost.ls(ipfs)
-  domains.forEach(n => console.log(` - ${n}`))
+  domains.forEach(n => log(`      ${n}`))
 }
 
-async function sync (ipfs, silent) {
-  let spinner
-  if (!silent) spinner = ora({ text: 'Syncing snapshots...' }).start()
+async function sync (ipfs) {
+  const spinner = spin('Syncing snapshots...')
   await cohost.sync(ipfs)
-  if (!silent) spinner.succeed('Snapshots synced!')
+  spinner.succeed(' Snapshots synced!')
 }
 
-async function gc (ipfs, input, silent) {
+async function gc (ipfs, input) {
   let num = null
   if (input.length > 0) num = parseInt(input[0], 10)
 
-  let spinner
-  if (!silent) spinner = ora({ text: 'Cleaning cohosted websites...' }).start()
+  const spinner = spin('Cleaning cohosted websites...')
   await cohost.gc(ipfs, num)
-  if (!silent) spinner.succeed('Cohosted websites cleaned!')
+  spinner.succeed(' Cohosted websites cleaned!')
 }
 
 async function run () {
@@ -89,26 +96,32 @@ async function run () {
   const input = cli.input
 
   const { ipfs, provider } = await getIpfs()
+  log = logger.bind(null, cli.flags.silent)
+  spin = spinner.bind(null, cli.flags.silent)
+
+  if (!cli.flags.silent) {
+    log('🔌 Using', provider === 'IPFS_HTTP_API' ? 'local ipfs daemon via http api' : 'js-ipfs node')
+  }
 
   try {
     switch (cmd) {
       case 'add':
-        await add(ipfs, input, cli.flags.silent)
+        await add(ipfs, input)
         break
       case 'rm':
-        await rm(ipfs, input, cli.flags.silent)
+        await rm(ipfs, input)
         break
       case 'ls':
         await ls(ipfs, input)
         break
       case 'sync':
-        await sync(ipfs, cli.flags.silent)
+        await sync(ipfs)
         break
       case 'gc':
-        await gc(ipfs, input, cli.flags.silent)
+        await gc(ipfs, input)
         break
       default:
-        await add(ipfs, input.concat(cmd), cli.flags.silent)
+        await add(ipfs, input.concat(cmd))
     }
   } catch (error) {
     console.error(error.message || error)
@@ -129,6 +142,16 @@ function getIpfs () {
     getJsIpfs: () => require('ipfs'),
     jsIpfsOpts: { silent: true }
   })
+}
+
+function spinner (silent, text) {
+  if (silent) return { stop: () => {}, fail: () => {}, succeed: () => {} }
+  return ora({ text: ` ${text}`, spinner: 'dots' }).start()
+}
+
+function logger (silent, ...args) {
+  if (silent) return
+  console.log(args.join(' '))
 }
 
 run()
