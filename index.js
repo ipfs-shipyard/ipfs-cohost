@@ -26,6 +26,7 @@ async function add (ipfs, domain) {
   }
 
   const newPath = `/cohosting/${domain}/${getTimestamp()}`
+  await ipfs.refs(cid, { recursive: true })
   await ipfs.files.cp([cid, newPath])
   return ipfs.files.stat(newPath)
 }
