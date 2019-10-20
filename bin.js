@@ -12,9 +12,10 @@ let spin = null
 const cli = meow(`
   Usage
     $ ipfs-cohost <domain>...
-    $ ipfs-cohost add <domain>...
+    $ ipfs-cohost add <domain>... [--lazy] [--full]
     $ ipfs-cohost rm <domain>...
     $ ipfs-cohost ls [domain]...
+    $ ipfs-cohost mv [domain]... [--lazy] [--full]
     $ ipfs-cohost sync
     $ ipfs-cohost gc [n]
 
@@ -23,12 +24,20 @@ const cli = meow(`
 
   Options
     --silent, -s  Just do your job
+    --full        Fully cohost a website
+    --lazy        Lazily cohost a website (default)
 `, {
   flags: {
     silent: {
       type: 'boolean',
       default: false,
       alias: 's'
+    },
+    full: {
+      type: 'boolean'
+    },
+    lazy: {
+      type: 'boolean'
     }
   }
 })
@@ -38,7 +47,9 @@ async function add (ipfs, input) {
   let size = 0
   for (const domain of input) {
     const spinner = spin(`Cohosting ${domain}...`)
-    const { hash, cumulativeSize } = await cohost.add(ipfs, domain)
+    const { hash, cumulativeSize } = await cohost.add(ipfs, domain, {
+      lazy: !cli.flags.full
+    })
     spinner.stop()
     size += cumulativeSize
     log('📍', domain.padEnd(longestDomain.length), hash, prettyBytes(cumulativeSize))
@@ -59,17 +70,31 @@ async function rm (ipfs, input) {
 async function ls (ipfs, input) {
   if (input.length > 0) {
     for (const domain of input) {
-      const snapshots = await cohost.ls(ipfs, domain)
-      log(`⏱  Snapshots for ${domain}:`)
-      snapshots.forEach(n => log(`      ${n}`))
+      const { lazy, full } = await cohost.ls(ipfs, domain)
+      if (lazy.length > 0) {
+        log(`⏱  Lazy snapshots for ${domain}:`)
+        lazy.forEach(n => log(`      ${n}`))
+      }
+
+      if (full.length > 0) {
+        log(`⏱  Full snapshots for ${domain}:`)
+        full.forEach(n => log(`      ${n}`))
+      }
     }
 
     return
   }
 
-  log('📍 Cohosted domains:')
-  const domains = await cohost.ls(ipfs)
-  domains.forEach(n => log(`      ${n}`))
+  const { lazy, full } = await cohost.ls(ipfs)
+  if (lazy.length > 0) {
+    log('📍 Lazily cohosted domains:')
+    lazy.forEach(n => log(`      ${n}`))
+  }
+
+  if (full.length > 0) {
+    log('📍 Fully cohosted domains:')
+    full.forEach(n => log(`      ${n}`))
+  }
 }
 
 async function sync (ipfs) {
@@ -85,6 +110,13 @@ async function gc (ipfs, input) {
   const spinner = spin('Cleaning cohosted websites...')
   await cohost.gc(ipfs, num)
   spinner.succeed(' Cohosted websites cleaned!')
+}
+
+async function mv (ipfs, input) {
+  for (const domain of input) {
+    await cohost.mv(ipfs, domain, { lazy: !cli.flags.full })
+    log(`📍 ${input} now ${cli.flags.full ? 'fully' : 'lazily'} cohosted!`)
+  }
 }
 
 async function run () {
@@ -119,6 +151,9 @@ async function run () {
         break
       case 'gc':
         await gc(ipfs, input)
+        break
+      case 'mv':
+        await mv(ipfs, input)
         break
       default:
         await add(ipfs, input.concat(cmd))

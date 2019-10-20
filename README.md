@@ -6,7 +6,7 @@ If your domain has a [DNSlink] to a CID, then `ipfs-cohost` will let others pin 
 
 ## Usage
 
-Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain, and pins it to your local IPFS node.
+Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain and starts cohosting the domains. By default, we use a [lazy cohosting]. You can force the domains to be fully cohosted by using the flag `--full`.
 
 ```console
 $ ipfs-cohost add ipfs.io docs.ipfs.io awesome.ipfs.io
@@ -43,10 +43,13 @@ Use `ls` with no arguments to list the cohosted domains:
 ```console
 $ ipfs-cohost ls
 🔌 Using local ipfs daemon via http api
-📍 Cohosted domains:
-      ipfs.io
+📍 Lazily cohosted domains:
       docs.ipfs.io
+      ipfs.io
+📍 Fully cohosted domains:
+      arewedistributedyet.com
       awesome.ipfs.io
+      ipfs.io
 ```
 
 Use `ls` with domains as arguments to list the snapshots for each domain:
@@ -54,7 +57,7 @@ Use `ls` with domains as arguments to list the snapshots for each domain:
 ```console
 $ ipfs-cohost awesome.ipfs.io
 🔌 Using local ipfs daemon via http api
-⏱ Snapshots for ipfs.io:
+⏱ Full snapshots for ipfs.io:
       2019-10-06_095057
       2019-10-05_135342
 ```
@@ -103,3 +106,4 @@ $ npx ipfs-cohost add docs.ipfs.io blog.ipfs.io ipfs.io
 
 [IPFS]: https://ipfs.io
 [DNSLink]: https://dnslink.io
+[lazy cohosting]: https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md#lazy-and-full-cohosting
