@@ -42,7 +42,7 @@ $ ipfs-cohost ipfs.io --silent
 
 ### Could you do this with a few lines of bash?
 
-Yes. That is how this command started it's life. You do not need `ipfs-cohost` to co-hosts websites; the `ipfs` command can do it all!
+Yes. That is how this command started its life. You do not need `ipfs-cohost` to co-hosts websites; the `ipfs` command can do it all!
 
 ```console
 $ ipfs object stat /ipns/docs.ipfs.io | grep CumulativeSize
