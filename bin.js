@@ -17,7 +17,7 @@ const cli = meow(`
     $ ipfs-cohost ls [domain]...
     $ ipfs-cohost mv [domain]... [--lazy] [--full]
     $ ipfs-cohost sync
-    $ ipfs-cohost gc [n]
+    $ ipfs-cohost prune [n]
 
   Example
     $ ipfs-cohost docs.ipfs.io cid.ipfs.io
@@ -103,12 +103,12 @@ async function sync (ipfs) {
   spinner.succeed(' Snapshots synced!')
 }
 
-async function gc (ipfs, input) {
+async function prune (ipfs, input) {
   let num = null
   if (input.length > 0) num = parseInt(input[0], 10)
 
   const spinner = spin('Cleaning cohosted websites...')
-  await cohost.gc(ipfs, num)
+  await cohost.prune(ipfs, num)
   spinner.succeed(' Cohosted websites cleaned!')
 }
 
@@ -149,8 +149,8 @@ async function run () {
       case 'sync':
         await sync(ipfs)
         break
-      case 'gc':
-        await gc(ipfs, input)
+      case 'prune':
+        await prune(ipfs, input)
         break
       case 'mv':
         await mv(ipfs, input)

@@ -61,10 +61,10 @@ async function add (ipfs, domain, opts) {
   // of the website.
   if (!opts.lazy) {
     if (opts.fetchInBackground) {
-    	ipfs.refs(cid, { recursive: true })
-	} else {
-		await ipfs.refs(cid, { recursive: true })
-	}
+      ipfs.refs(cid, { recursive: true })
+    } else {
+      await ipfs.refs(cid, { recursive: true })
+    }
   }
 
   return ipfs.files.stat(newPath)
@@ -114,15 +114,15 @@ async function sync (ipfs) {
   }
 }
 
-async function gc (ipfs, count = null) {
+async function prune (ipfs, keep = null) {
   const { lazy, full } = await ls(ipfs)
   const domains = Array.from(new Set(lazy.concat(full)))
 
   for (const domain of domains) {
-    if (count !== null) {
+    if (keep !== null) {
       const { lazy, full } = await ls(ipfs, domain)
       const allSnapshots = lazy.concat(full).sort().reverse()
-      const toRemove = allSnapshots.slice(count)
+      const toRemove = allSnapshots.slice(keep)
 
       for (const snap of toRemove) {
         if (lazy.includes(snap)) {
@@ -159,6 +159,6 @@ module.exports = {
   rm,
   ls,
   sync,
-  gc,
+  prune,
   mv
 }

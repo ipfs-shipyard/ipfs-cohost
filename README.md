@@ -72,12 +72,12 @@ $ ipfs-cohost sync
 ✔  Snapshots synced!
 ```
 
-### Garbage collection
+### Prune
 
 Delete all snapshots but the last `n`. If `n` is not provided, all snapshots will be deleted.
 
 ```console
-$ ipfs-cohost gc [n]
+$ ipfs-cohost prune [n]
 🔌 Using local ipfs daemon via http api
 ✔  Cohosted websites cleaned!
 ```
