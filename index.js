@@ -117,8 +117,8 @@ async function sync (ipfs) {
 async function pruneHelper (ipfs, keep, domains, type) {
   for (const domain of domains) {
     if (keep !== null) {
-      const { lazy, full } = await ls(ipfs, domain)
-      const toRemove = (type === 'lazy' ? lazy : full).sort().reverse().slice(keep)
+      const snapshots = await ls(ipfs, domain)
+      const toRemove = snapshots[type].sort().reverse().slice(keep)
 
       for (const snap of toRemove) {
         await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
