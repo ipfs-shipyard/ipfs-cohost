@@ -82,9 +82,9 @@ $ ipfs-cohost prune [n]
 ✔  Cohosted websites cleaned!
 ```
 
-### Could you do this with a few lines of bash?
+### Could you do these with a few lines of bash?
 
-Yes. All of this commands can be reproducible via bash commands. Please take a look at the [cohosting SPEC](https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md) to know which `ipfs` commands are equivalent to this ones.
+Yes. All of this commands can be reproducible via bash commands. Please take a look at the [cohosting SPEC](https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md) to know which `ipfs` commands are equivalent to these ones.
 
 ## Install
 
