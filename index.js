@@ -114,30 +114,26 @@ async function sync (ipfs) {
   }
 }
 
-async function prune (ipfs, keep = null) {
-  const { lazy, full } = await ls(ipfs)
-  const domains = Array.from(new Set(lazy.concat(full)))
-
+async function pruneHelper (ipfs, keep, domains, type) {
   for (const domain of domains) {
     if (keep !== null) {
       const { lazy, full } = await ls(ipfs, domain)
-      const allSnapshots = lazy.concat(full).sort().reverse()
-      const toRemove = allSnapshots.slice(keep)
+      const toRemove = (type === 'lazy' ? lazy : full).sort().reverse().slice(keep)
 
       for (const snap of toRemove) {
-        if (lazy.includes(snap)) {
-          await ipfs.files.rm(`/cohosting/lazy/${domain}/${snap}`, { recursive: true })
-        } else {
-          await ipfs.files.rm(`/cohosting/full/${domain}/${snap}`, { recursive: true })
-        }
+        await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
       }
     } else {
-      await rm(ipfs, domain)
-      // On this case, we "self-heal" the repository. If there was a 'full' and a 'lazy' entry
-      // for a certain domain, only the full (the strongest) will remain created.
-      await ipfs.files.mkdir(`/cohosting/${full.includes(domain) ? 'full' : 'lazy'}/${domain}`, { parents: true })
+      await ipfs.files.rm(`/cohosting/${type}/${domain}`, { recursive: true })
+      await ipfs.files.mkdir(`/cohosting/${type}/${domain}`, { parents: true })
     }
   }
+}
+
+async function prune (ipfs, keep = null) {
+  const { lazy, full } = await ls(ipfs)
+  await pruneHelper(ipfs, keep, lazy, 'lazy')
+  await pruneHelper(ipfs, keep, full, 'full')
 }
 
 async function mv (ipfs, domain, opts) {
