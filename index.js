@@ -60,7 +60,11 @@ async function add (ipfs, domain, opts) {
   // If we're not cohosting lazily, then load the full contents
   // of the website.
   if (!opts.lazy) {
-    await ipfs.refs(cid, { recursive: true })
+    if (opts.fetchInBackground) {
+    	ipfs.refs(cid, { recursive: true })
+	} else {
+		await ipfs.refs(cid, { recursive: true })
+	}
   }
 
   return ipfs.files.stat(newPath)
