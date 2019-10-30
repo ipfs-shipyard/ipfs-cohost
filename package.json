@@ -4,7 +4,8 @@
   "description": "A CLI to co-host websites published to IPFS",
   "main": "index.js",
   "scripts": {
-    "test": "say sorry && exit 1"
+    "test": "say sorry && exit 1",
+    "lint": "standard *.js"
   },
   "bin": {
     "ipfs-cohost": "./bin.js"
@@ -12,13 +13,13 @@
   "author": "olizilla",
   "license": "MIT",
   "dependencies": {
-    "ipfs": "^0.37.0",
-    "ipfs-provider": "^0.2.1",
+    "ipfs": "^0.38.1",
+    "ipfs-provider": "^0.2.2",
     "meow": "^5.0.0",
-    "ora": "^3.4.0",
+    "ora": "^4.0.2",
     "pretty-bytes": "^5.3.0"
   },
   "devDependencies": {
-    "standard": "^13.1.0"
+    "standard": "^14.3.1"
   }
 }
