@@ -21,7 +21,7 @@ $ ipfs-cohost add ipfs.io docs.ipfs.io awesome.ipfs.io
 Passing the `--silent` options will prevent any logging.
 
 ```console
-$ ipfs-cohost ipfs.io --silent
+$ ipfs-cohost add ipfs.io --silent
 ```
 
 ### Remove cohosted website
