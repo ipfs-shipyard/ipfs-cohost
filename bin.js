@@ -119,12 +119,12 @@ async function prune (ipfs, input) {
   spinner.succeed(' Cohosted websites cleaned!')
 
   if (lazy.length > 0) {
-    log(`⏱  Lazy snapshots pruned:`)
+    log('⏱  Lazy snapshots pruned:')
     printSnapshots(lazy)
   }
 
   if (full.length > 0) {
-    log(`⏱  Full snapshots pruned:`)
+    log('⏱  Full snapshots pruned:')
     printSnapshots(full)
   }
 }

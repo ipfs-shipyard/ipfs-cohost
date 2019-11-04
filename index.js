@@ -123,7 +123,7 @@ async function pruneHelper (ipfs, keep, domains, type) {
     if (keep !== null) {
       const toRemove = snapshots.reverse().slice(keep)
       for (const snap of toRemove) {
-       await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
+        await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
       }
 
       if (toRemove.length > 0) {
