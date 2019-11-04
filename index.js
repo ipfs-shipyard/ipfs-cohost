@@ -115,25 +115,40 @@ async function sync (ipfs) {
 }
 
 async function pruneHelper (ipfs, keep, domains, type) {
-  for (const domain of domains) {
-    if (keep !== null) {
-      const snapshots = await ls(ipfs, domain)
-      const toRemove = snapshots[type].sort().reverse().slice(keep)
+  const removed = []
 
+  for (const domain of domains) {
+    const snapshots = (await ls(ipfs, domain))[type].sort()
+
+    if (keep !== null) {
+      const toRemove = snapshots.reverse().slice(keep)
       for (const snap of toRemove) {
-        await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
+       await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
+      }
+
+      if (toRemove.length > 0) {
+        removed.push({ domain, snapshots: toRemove.sort() })
       }
     } else {
+      if (snapshots.length > 0) {
+        removed.push({ domain, snapshots })
+      }
+
       await ipfs.files.rm(`/cohosting/${type}/${domain}`, { recursive: true })
       await ipfs.files.mkdir(`/cohosting/${type}/${domain}`, { parents: true })
     }
   }
+
+  return removed
 }
 
 async function prune (ipfs, keep = null) {
   const { lazy, full } = await ls(ipfs)
-  await pruneHelper(ipfs, keep, lazy, 'lazy')
-  await pruneHelper(ipfs, keep, full, 'full')
+
+  return {
+    lazy: await pruneHelper(ipfs, keep, lazy, 'lazy'),
+    full: await pruneHelper(ipfs, keep, full, 'full')
+  }
 }
 
 async function mv (ipfs, domain, opts) {
