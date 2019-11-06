@@ -103,13 +103,30 @@ async function sync (ipfs) {
   spinner.succeed(' Snapshots synced!')
 }
 
+function printSnapshots (snap) {
+  for (const { domain, snapshots } of snap) {
+    log(`      ${domain}`)
+    snapshots.forEach(n => log(`            ${n}`))
+  }
+}
+
 async function prune (ipfs, input) {
   let num = null
   if (input.length > 0) num = parseInt(input[0], 10)
 
   const spinner = spin('Cleaning cohosted websites...')
-  await cohost.prune(ipfs, num)
+  const { lazy, full } = await cohost.prune(ipfs, num)
   spinner.succeed(' Cohosted websites cleaned!')
+
+  if (lazy.length > 0) {
+    log('⏱  Lazy snapshots pruned:')
+    printSnapshots(lazy)
+  }
+
+  if (full.length > 0) {
+    log('⏱  Full snapshots pruned:')
+    printSnapshots(full)
+  }
 }
 
 async function mv (ipfs, input) {
