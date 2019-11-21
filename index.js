@@ -10,7 +10,7 @@ function getTimestamp () {
 function getOptions (opts) {
   opts = opts || {}
   opts = Object.assign({
-    lazy: true
+    full: true
   }, opts)
   return opts
 }
@@ -36,7 +36,7 @@ async function add (ipfs, domain, opts) {
   opts = getOptions(opts)
 
   const cid = await ipfs.resolve(`/ipns/${domain}`)
-  const path = `/cohosting/${opts.lazy ? 'lazy' : 'full'}/${domain}`
+  const path = `/cohosting/${opts.full ? 'full' : 'lazy'}/${domain}`
 
   // Create with parents if it is the first time
   await ipfs.files.mkdir(path, { parents: true })
@@ -59,7 +59,7 @@ async function add (ipfs, domain, opts) {
 
   // If we're not cohosting lazily, then load the full contents
   // of the website.
-  if (!opts.lazy) {
+  if (opts.full) {
     if (opts.fetchInBackground) {
       ipfs.refs(cid, { recursive: true })
     } else {
@@ -164,11 +164,11 @@ async function mv (ipfs, domain, opts) {
   const lazy = `/cohosting/lazy/${domain}`
   const full = `/cohosting/full/${domain}`
 
-  if (await isLazilyCohosted(ipfs, domain) && !opts.lazy) {
+  if (await isLazilyCohosted(ipfs, domain) && opts.full) {
     await ipfs.files.mv([lazy, full])
   }
 
-  if (await isFullyCohosted(ipfs, domain) && opts.lazy) {
+  if (await isFullyCohosted(ipfs, domain) && !opts.full) {
     await ipfs.files.mv([full, lazy])
   }
 }
