@@ -80,6 +80,10 @@ async function rm (ipfs, domain) {
   }
 }
 
+async function rmAll (ipfs) {
+  await ipfs.files.rm('/cohosting', { recursive: true })
+}
+
 async function ls (ipfs, domain = null) {
   let lazyPath = '/cohosting/lazy'
   let fullPath = '/cohosting/full'
@@ -168,6 +172,7 @@ async function mv (ipfs, domain, opts) {
 module.exports = {
   add,
   rm,
+  rmAll,
   ls,
   sync,
   prune,

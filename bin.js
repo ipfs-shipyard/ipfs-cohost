@@ -13,7 +13,7 @@ const cli = meow(`
   Usage
     $ ipfs-cohost <domain>...
     $ ipfs-cohost add <domain>... [--lazy] [--full]
-    $ ipfs-cohost rm <domain>...
+    $ ipfs-cohost rm <domain>... [--all]
     $ ipfs-cohost ls [domain]...
     $ ipfs-cohost mv [domain]... [--lazy] [--full]
     $ ipfs-cohost sync
@@ -38,6 +38,9 @@ const cli = meow(`
     },
     lazy: {
       type: 'boolean'
+    },
+    all: {
+      type: 'boolean'
     }
   }
 })
@@ -60,6 +63,14 @@ async function add (ipfs, input) {
 
 async function rm (ipfs, input) {
   let spinner
+
+  if (cli.flags.all) {
+    spinner = spin('Removing all cohosted websites...')
+    await cohost.rmAll(ipfs)
+    spinner.succeed('All cohosted websites removed.')
+    return
+  }
+
   for (const domain of input) {
     spinner = spin(`Stopping to cohost ${domain}...`)
     await cohost.rm(ipfs, domain)
