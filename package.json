@@ -13,7 +13,6 @@
   "author": "olizilla",
   "license": "MIT",
   "dependencies": {
-    "ipfs": "^0.38.1",
     "ipfs-provider": "^0.2.2",
     "meow": "^5.0.0",
     "ora": "^4.0.2",
