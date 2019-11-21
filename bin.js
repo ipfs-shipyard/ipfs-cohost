@@ -180,7 +180,7 @@ async function run () {
     process.exit(-1)
   }
 
-  if (provider === 'JS_IPFS' && !cli.flags.pin) {
+  if (provider === 'JS_IPFS') {
     await ipfs.stop()
     process.exit()
   }
