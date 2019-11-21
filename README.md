@@ -6,7 +6,7 @@ If your domain has a [DNSlink] to a CID, then `ipfs-cohost` will let others pin 
 
 ## Usage
 
-Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain and starts cohosting the domains. By default, we use a [lazy cohosting]. You can force the domains to be fully cohosted by using the flag `--full`.
+Pass it the list of domains you want to cohost. It finds the CID from the [DNSLink] for that domain and starts cohosting the domains. By default, we use a [full cohosting]. You can force the domains to be lazily cohosted by using the flag `--lazy`.
 
 ```console
 $ ipfs-cohost add ipfs.io docs.ipfs.io awesome.ipfs.io
@@ -114,4 +114,4 @@ $ npx ipfs-cohost add docs.ipfs.io blog.ipfs.io ipfs.io
 
 [IPFS]: https://ipfs.io
 [DNSLink]: https://dnslink.io
-[lazy cohosting]: https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md#lazy-and-full-cohosting
+[full cohosting]: https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md#lazy-and-full-cohosting
