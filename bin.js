@@ -26,6 +26,7 @@ const cli = meow(`
     --silent, -s  Just do your job
     --full        Fully cohost a website
     --lazy        Lazily cohost a website (default)
+    --all         Remove all cohosted websites (lazy AND full)
 `, {
   flags: {
     silent: {
