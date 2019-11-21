@@ -13,7 +13,7 @@ let spin = null
 const cli = meow(`
   Usage
     $ ipfs-cohost <domain>...
-    $ ipfs-cohost add <domain>... [--lazy] [--full] [--force]
+    $ ipfs-cohost add <domain>... [--lazy] [--full] [--non-interactive]
     $ ipfs-cohost rm <domain>... [--all]
     $ ipfs-cohost ls [domain]...
     $ ipfs-cohost mv [domain]... [--lazy] [--full]
@@ -24,11 +24,11 @@ const cli = meow(`
     $ ipfs-cohost docs.ipfs.io cid.ipfs.io
 
   Options
-    --silent, -s  Just do your job
-    --full        Fully cohost a website (default)
-    --lazy        Lazily cohost a website
-    --all         Remove all cohosted websites (lazy AND full)
-    --force       Cohost websites no matter their size
+    --silent, -s        Just do your job
+    --full              Fully cohost a website (default)
+    --lazy              Lazily cohost a website
+    --all               Remove all cohosted websites (lazy AND full)
+    --non-interactive   Cohost websites no matter their size
 `, {
   flags: {
     silent: {
@@ -45,7 +45,7 @@ const cli = meow(`
     all: {
       type: 'boolean'
     },
-    force: {
+    nonInteractive: {
       type: 'boolean',
       default: false
     }
@@ -72,7 +72,7 @@ async function addCheckSizes (ipfs, input) {
 }
 
 async function add (ipfs, input) {
-  if (!cli.flags.force && !await addCheckSizes(ipfs, input)) {
+  if (!cli.flags.nonInteractive && !await addCheckSizes(ipfs, input)) {
     return
   }
 
