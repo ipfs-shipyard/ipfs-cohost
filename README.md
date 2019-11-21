@@ -90,6 +90,10 @@ $ ipfs-cohost prune [n]
 ✔  Cohosted websites cleaned!
 ```
 
+### Only add latest copies
+
+In some situations, you might want to be able to provide a strict list of domains you want to have one and only snapshot per domain. You can use `ipfs-cohost latest <domain>...` as a short hand for `ipfs-cohost rm --all && ipfs-cohost add <domain>...`. All flags apply.
+
 ### Could you do these with a few lines of bash?
 
 Yes. All of this commands can be reproducible via bash commands. Please take a look at the [cohosting SPEC](https://github.com/ipfs-shipyard/cohosting/blob/master/SPEC.md) to know which `ipfs` commands are equivalent to these ones.

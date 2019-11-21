@@ -19,6 +19,7 @@ const cli = meow(`
     $ ipfs-cohost mv [domain]... [--lazy] [--full]
     $ ipfs-cohost sync
     $ ipfs-cohost prune [n]
+    $ ipfs-cohost latest <domain>... [--lazy] [--full]
 
   Example
     $ ipfs-cohost docs.ipfs.io cid.ipfs.io
@@ -177,6 +178,12 @@ async function mv (ipfs, input) {
   }
 }
 
+async function latest (ipfs, input) {
+  cli.flags.all = true
+  await rm(ipfs)
+  await add(ipfs, input)
+}
+
 async function run () {
   if (cli.input.length === 0) {
     return cli.showHelp()
@@ -212,6 +219,9 @@ async function run () {
         break
       case 'mv':
         await mv(ipfs, input)
+        break
+      case 'latest':
+        await latest(ipfs, input)
         break
       default:
         await add(ipfs, input.concat(cmd))
