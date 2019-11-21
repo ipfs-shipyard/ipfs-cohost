@@ -120,7 +120,7 @@ async function pruneHelper (ipfs, keep, domains, type) {
   for (const domain of domains) {
     const snapshots = (await ls(ipfs, domain))[type].sort()
 
-    if (keep !== null) {
+    if (keep !== 0) {
       const toRemove = snapshots.reverse().slice(keep)
       for (const snap of toRemove) {
         await ipfs.files.rm(`/cohosting/${type}/${domain}/${snap}`, { recursive: true })
@@ -142,8 +142,12 @@ async function pruneHelper (ipfs, keep, domains, type) {
   return removed
 }
 
-async function prune (ipfs, keep = null) {
+async function prune (ipfs, keep) {
   const { lazy, full } = await ls(ipfs)
+
+  if (typeof keep !== 'number') {
+    throw new Error('keep must be a number')
+  }
 
   return {
     lazy: await pruneHelper(ipfs, keep, lazy, 'lazy'),

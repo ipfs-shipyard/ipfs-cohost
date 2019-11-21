@@ -111,7 +111,7 @@ function printSnapshots (snap) {
 }
 
 async function prune (ipfs, input) {
-  let num = null
+  let num = 1
   if (input.length > 0) num = parseInt(input[0], 10)
 
   const spinner = spin('Cleaning cohosted websites...')

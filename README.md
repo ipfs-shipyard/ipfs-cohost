@@ -74,7 +74,7 @@ $ ipfs-cohost sync
 
 ### Prune
 
-Delete all snapshots but the last `n`. If `n` is not provided, all snapshots will be deleted.
+Delete all snapshots but the last `n`. If `n` is not provided, all snapshots but the last one will be deleted.
 
 ```console
 $ ipfs-cohost prune [n]
