@@ -60,8 +60,8 @@ async function addCheckSizes (ipfs, input) {
 
   const size = stats.reduce((acc, v) => acc + v.cumulativeSize, 0)
 
-  if (size >= 10) {
-    // Over or equal to 1GB
+  if (size >= 10485760) {
+    // Over or equal to 10 MiB
 
     return yesno({
       question: `⚠️  This operation will use ${prettyBytes(size)}. Do you wish to continue?`
