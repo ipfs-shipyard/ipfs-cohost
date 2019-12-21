@@ -5,6 +5,7 @@ const meow = require('meow')
 const cohost = require('.')
 const ora = require('ora')
 const prettyBytes = require('pretty-bytes')
+const yesno = require('yesno')
 
 let log = null
 let spin = null
@@ -12,7 +13,7 @@ let spin = null
 const cli = meow(`
   Usage
     $ ipfs-cohost <domain>...
-    $ ipfs-cohost add <domain>... [--lazy] [--full]
+    $ ipfs-cohost add <domain>... [--lazy] [--full] [--non-interactive]
     $ ipfs-cohost rm <domain>... [--all]
     $ ipfs-cohost ls [domain]...
     $ ipfs-cohost mv [domain]... [--lazy] [--full]
@@ -23,10 +24,11 @@ const cli = meow(`
     $ ipfs-cohost docs.ipfs.io cid.ipfs.io
 
   Options
-    --silent, -s  Just do your job
-    --full        Fully cohost a website
-    --lazy        Lazily cohost a website (default)
-    --all         Remove all cohosted websites (lazy AND full)
+    --silent, -s        Just do your job
+    --full              Fully cohost a website (default)
+    --lazy              Lazily cohost a website
+    --all               Remove all cohosted websites (lazy AND full)
+    --non-interactive   Cohost websites no matter their size
 `, {
   flags: {
     silent: {
@@ -42,17 +44,44 @@ const cli = meow(`
     },
     all: {
       type: 'boolean'
+    },
+    nonInteractive: {
+      type: 'boolean',
+      default: false
     }
   }
 })
 
+async function addCheckSizes (ipfs, input) {
+  const stats = await Promise.all(input.map(async domain => {
+    const cid = await ipfs.resolve(`/ipns/${domain}`)
+    return ipfs.files.stat(cid)
+  }))
+
+  const size = stats.reduce((acc, v) => acc + v.cumulativeSize, 0)
+
+  if (size >= 10485760) {
+    // Over or equal to 10 MiB
+
+    return yesno({
+      question: `⚠️  This operation will use ${prettyBytes(size)}. Do you wish to continue?`
+    })
+  }
+
+  return true
+}
+
 async function add (ipfs, input) {
+  if (!cli.flags.nonInteractive && !await addCheckSizes(ipfs, input)) {
+    return
+  }
+
   const longestDomain = input.reduce((r, c) => r.length >= c.length ? r : c)
   let size = 0
   for (const domain of input) {
     const spinner = spin(`Cohosting ${domain}...`)
     const { hash, cumulativeSize } = await cohost.add(ipfs, domain, {
-      lazy: !cli.flags.full
+      full: !cli.flags.lazy
     })
     spinner.stop()
     size += cumulativeSize
