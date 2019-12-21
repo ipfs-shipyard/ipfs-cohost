@@ -36,6 +36,14 @@ $ ipfs-cohost rm ipfs.io docs.ipfs.io awesome.ipfs.io
 ✔  awesome.ipfs.io no longer cohosted.
 ```
 
+You can also remove every website you have cohosted:
+
+```console
+$ ipfs-cohost rm --all
+🔌 Using local ipfs daemon via http api
+✔ All cohosted websites removed.
+```
+
 ### List cohosted websites and snapshots
 
 Use `ls` with no arguments to list the cohosted domains:
