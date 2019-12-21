@@ -240,10 +240,7 @@ async function run () {
 function getIpfs () {
   return ipfsProvider({
     tryWebExt: false,
-    tryWindow: false,
-    tryJsIpfs: true,
-    getJsIpfs: () => require('ipfs'),
-    jsIpfsOpts: { silent: true }
+    tryWindow: false
   })
 }
 
