@@ -14,12 +14,12 @@
   "license": "MIT",
   "dependencies": {
     "ipfs-provider": "^0.2.2",
-    "meow": "^5.0.0",
-    "ora": "^4.0.2",
+    "meow": "^6.1.0",
+    "ora": "^4.0.3",
     "pretty-bytes": "^5.3.0",
     "yesno": "^0.3.1"
   },
   "devDependencies": {
-    "standard": "^14.3.1"
+    "standard": "^14.3.3"
   }
 }
