@@ -1,5 +1,7 @@
 'use strict'
 
+const all = require('it-all')
+
 function getTimestamp () {
   return new Date().toISOString()
     .replace(/:/g, '')
@@ -40,7 +42,7 @@ async function add (ipfs, domain, opts) {
 
   // Create with parents if it is the first time
   await ipfs.files.mkdir(path, { parents: true })
-  const dirs = await ipfs.files.ls(path)
+  const dirs = await all(ipfs.files.ls(path))
   const latest = dirs.map(file => file.name).sort().pop()
 
   if (latest) {
@@ -63,7 +65,7 @@ async function add (ipfs, domain, opts) {
     if (opts.fetchInBackground) {
       ipfs.refs(cid, { recursive: true })
     } else {
-      await ipfs.refs(cid, { recursive: true })
+      await all(ipfs.refs(cid, { recursive: true }))
     }
   }
 
@@ -99,8 +101,8 @@ async function ls (ipfs, domain = null) {
   // it may happen we have a domain on both, so we return all
   // entries.
 
-  const lazy = await ipfs.files.ls(lazyPath).catch(_ => [])
-  const full = await ipfs.files.ls(fullPath).catch(_ => [])
+  const lazy = await all(ipfs.files.ls(lazyPath)).catch(_ => [])
+  const full = await all(ipfs.files.ls(fullPath)).catch(_ => [])
 
   return {
     lazy: lazy.map(f => f.name).sort(),

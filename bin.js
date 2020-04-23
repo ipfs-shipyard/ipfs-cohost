@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-const ipfsProvider = require('ipfs-provider')
+const { getIpfs, providers } = require('ipfs-provider')
+const { httpClient } = providers
 const meow = require('meow')
 const cohost = require('.')
 const ora = require('ora')
@@ -192,12 +193,16 @@ async function run () {
   const cmd = cli.input.shift()
   const input = cli.input
 
-  const { ipfs, provider } = await getIpfs()
+  const { ipfs, provider } = await getIpfs({
+    loadHttpClientModule: () => require('ipfs-http-client'),
+    providers: [httpClient()]
+  })
+
   log = logger.bind(null, cli.flags.silent)
   spin = spinner.bind(null, cli.flags.silent)
 
   if (!cli.flags.silent) {
-    log('🔌 Using', provider === 'IPFS_HTTP_API' ? 'local ipfs daemon via http api' : 'js-ipfs node')
+    log('🔌 Using', provider === 'httpClient' ? 'local ipfs daemon via http api' : 'js-ipfs node')
   }
 
   try {
@@ -235,13 +240,6 @@ async function run () {
     await ipfs.stop()
     process.exit()
   }
-}
-
-function getIpfs () {
-  return ipfsProvider({
-    tryWebExt: false,
-    tryWindow: false
-  })
 }
 
 function spinner (silent, text) {

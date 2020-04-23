@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "say sorry && exit 1",
-    "lint": "standard *.js"
+    "lint": "standard *.js --fix"
   },
   "bin": {
     "ipfs-cohost": "./bin.js"
@@ -13,9 +13,11 @@
   "author": "olizilla",
   "license": "MIT",
   "dependencies": {
-    "ipfs-provider": "^0.2.2",
+    "ipfs-http-client": "^44.0.0",
+    "ipfs-provider": "^1.0.0",
+    "it-all": "^1.0.1",
     "meow": "^6.1.0",
-    "ora": "^4.0.3",
+    "ora": "^4.0.4",
     "pretty-bytes": "^5.3.0",
     "yesno": "^0.3.1"
   },
