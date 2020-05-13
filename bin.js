@@ -193,10 +193,16 @@ async function run () {
   const cmd = cli.input.shift()
   const input = cli.input
 
-  const { ipfs, provider } = await getIpfs({
+  const res = await getIpfs({
     loadHttpClientModule: () => require('ipfs-http-client'),
     providers: [httpClient()]
   })
+
+  if (!res) {
+    throw new Error('Unable to find IPFS node. Make sure ipfs daemon is running.')
+  }
+
+  const { ipfs, provider } = res
 
   log = logger.bind(null, cli.flags.silent)
   spin = spinner.bind(null, cli.flags.silent)
