@@ -1,6 +1,6 @@
 {
   "name": "ipfs-cohost",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "A CLI to co-host websites published to IPFS",
   "main": "index.js",
   "scripts": {
