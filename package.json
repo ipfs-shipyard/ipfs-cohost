@@ -11,7 +11,15 @@
     "ipfs-cohost": "./bin.js"
   },
   "author": "olizilla",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipfs-shipyard/ipfs-cohost.git"
+  },
   "license": "MIT",
+    "bugs": {
+    "url": "https://github.com/ipfs-shipyard/ipfs-cohost/issues"
+  },
+  "homepage": "https://github.com/ipfs-shipyard/ipfs-cohost",
   "dependencies": {
     "ipfs-http-client": "^44.0.3",
     "ipfs-provider": "^1.0.0",
